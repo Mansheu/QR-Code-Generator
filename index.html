@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+    <div class="instructions">
+        <h2>How to Use the QR Code Generator</h2>
+        <ol>
+            <li>Paste your content in the input field.</li>
+            <li>Click the "Create QRCode" button to generate the QR code.</li>
+            <li>Download it by clicking the "Download QRCode" button.</li>
+            <li>click the "Create New QR Code" button for new QR code.</li>
+        </ol>
+        <p>© 2024 QR Code Generator by <b>MansheuDev</b></p>
+    </div>
+    <div class="container">
+        <h1>QR Code Generator</h1>
+        <div class="image" id="canvas">
+            <img src="qr-code.png" alt="no image" id="image">
+        </div>
+        <div class="form">
+            <input type="text" id="content" placeholder="Content in QRCode">
+            <button id="btnCreate">Create QRCode</button>
+            <button id="btnDownload" style="display: none;">Download QRCode</button>
+            <button id="btnNew" style="display: none;">Create New QR Code</button>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        let content = document.getElementById('content');
+        let btnCreate = document.getElementById('btnCreate');
+        let btnDownload = document.getElementById('btnDownload');
+        let btnNew = document.getElementById('btnNew');
+        let canvas = document.getElementById('canvas');
+        let qrCodeImage = document.getElementById('image');
+        let qrCode;
+    
+        btnCreate.onclick = () => {
+            if(content.value == '') return;
+    
+            // Clear previous QR code if it exists
+            if (qrCode) {
+                canvas.innerHTML = '';
+            }
+    
+            // Remove the placeholder image and input field
+            qrCodeImage.remove();
+            content.remove();
+    
+            // Get the dimensions of the container
+            let containerWidth = canvas.clientWidth;
+            let containerHeight = canvas.clientHeight;
+            let qrSize = Math.min(containerWidth, containerHeight);
+    
+            qrCode = new QRCodeStyling({
+                width: qrSize,
+                height: qrSize,
+                data: content.value,
+                image: "qr-code.png",
+                dotsOptions: {
+                    color: "#4267b2",
+                    type: "rounded"
+                },
+                backgroundOptions: {
+                    color: "#e9ebee",
+                },
+                imageOptions: {
+                    crossOrigin: "anonymous",
+                    margin: 20
+                }
+            });
+            qrCode.append(canvas);
+            btnDownload.style.display = 'block'; // Show the download button
+    
+            // Replace the Create QRCode button with Create New QR Code button
+            btnCreate.style.display = 'none';
+            btnNew.style.display = 'block';
+        }
+    
+        btnDownload.onclick = () => {
+            qrCode.download({ name: "qrcode", extension: "png", size: 500 });
+        }
+    
+        btnNew.onclick = () => {
+            window.location.reload(); // Refresh the page to home page
+        }
+    </script>
+
+    <footer class="footer">
+        
+    </footer>    
+</body>
+</html>
+
